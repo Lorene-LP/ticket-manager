@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ticket #{{ ticket.id }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-ticket-perforated me-2"></i>
+                    Ticket #{{ ticket.id }}
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <a href="{{ path('admin_ticket_edit', {'id': ticket.id}) }}" class="btn btn-warning">
+                            <i class="bi bi-pencil me-1"></i>
+                            Modifier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Détails du ticket</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Auteur :</strong><br>
+                            <a href="mailto:{{ ticket.authorEmail }}">{{ ticket.authorEmail }}</a>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Date d'ouverture :</strong><br>
+                            {{ ticket.openedAt|date('d/m/Y à H:i') }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Catégorie :</strong><br>
+                            <span class="badge bg-primary">{{ ticket.category.name }}</span>
+                            {% if ticket.category.description %}
+                                <br><small class="text-muted">{{ ticket.category.description }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Statut :</strong><br>
+                            {% if ticket.status.name == 'Nouveau' %}
+                                <span class="badge bg-info">{{ ticket.status.name }}</span>
+                            {% elseif ticket.status.name == 'Ouvert' %}
+                                <span class="badge bg-warning">{{ ticket.status.name }}</span>
+                            {% elseif ticket.status.name == 'Résolu' %}
+                                <span class="badge bg-success">{{ ticket.status.name }}</span>
+                            {% elseif ticket.status.name == 'Fermé' %}
+                                <span class="badge bg-secondary">{{ ticket.status.name }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ ticket.status.name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Responsable :</strong><br>
+                            {% if ticket.responsible %}
+                                {{ ticket.responsible.fullName ?: ticket.responsible.email }}
+                                <br><small class="text-muted">{{ ticket.responsible.email }}</small>
+                            {% else %}
+                                <span class="text-muted">Non assigné</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            {% if ticket.closedAt %}
+                                <strong>Date de fermeture :</strong><br>
+                                {{ ticket.closedAt|date('d/m/Y à H:i') }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Description :</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            {{ ticket.description|nl2br }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('admin_ticket_edit', {'id': ticket.id}) }}" class="btn btn-warning">
+                            <i class="bi bi-pencil me-2"></i>
+                            Modifier le ticket
+                        </a>
+                        <a href="{{ path('admin_tickets') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Retour à la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations supplémentaires -->
+            <div class="card shadow mt-3">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Informations</h6>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">
+                        <strong>ID :</strong> {{ ticket.id }}<br>
+                        <strong>Durée depuis ouverture :</strong> 
+                        {% set diff = date().diff(ticket.openedAt) %}
+                        {% if diff.days > 0 %}
+                            {{ diff.days }} jour{{ diff.days > 1 ? 's' : '' }}
+                        {% elseif diff.h > 0 %}
+                            {{ diff.h }} heure{{ diff.h > 1 ? 's' : '' }}
+                        {% else %}
+                            {{ diff.i }} minute{{ diff.i > 1 ? 's' : '' }}
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

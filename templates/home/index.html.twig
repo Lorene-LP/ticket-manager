@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Ticket - {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 mb-4">
+                <i class="bi bi-headset text-primary me-3"></i>
+                Support Client
+            </h1>
+            <p class="lead text-muted">
+                Vous rencontrez un problème ou avez une question ? 
+                Créez un ticket et notre équipe vous répondra rapidement.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Formulaire de création de ticket -->
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Créer un nouveau ticket
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    {{ form_start(ticketForm) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(ticketForm.authorEmail) }}
+                                {{ form_widget(ticketForm.authorEmail) }}
+                                {{ form_errors(ticketForm.authorEmail) }}
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Utilisée pour vous contacter
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(ticketForm.category) }}
+                                {{ form_widget(ticketForm.category) }}
+                                {{ form_errors(ticketForm.category) }}
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Choisissez la catégorie la plus appropriée
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_label(ticketForm.description) }}
+                            {{ form_widget(ticketForm.description) }}
+                            {{ form_errors(ticketForm.description) }}
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Décrivez votre problème en détail (entre 20 et 250 caractères)
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            {{ form_widget(ticketForm.submit) }}
+                        </div>
+                    {{ form_end(ticketForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section d'information -->
+    <div class="row mt-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="bi bi-clock-history fs-4"></i>
+                            </div>
+                            <h5 class="card-title">Réponse Rapide</h5>
+                            <p class="card-text text-muted">
+                                Notre équipe répond généralement sous 24h pour tous les tickets.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="bi bi-shield-check fs-4"></i>
+                            </div>
+                            <h5 class="card-title">Suivi Sécurisé</h5>
+                            <p class="card-text text-muted">
+                                Vos données sont protégées et votre ticket est suivi en permanence.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="bi bi-people fs-4"></i>
+                            </div>
+                            <h5 class="card-title">Équipe Experte</h5>
+                            <p class="card-text text-muted">
+                                Des professionnels qualifiés prennent en charge votre demande.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

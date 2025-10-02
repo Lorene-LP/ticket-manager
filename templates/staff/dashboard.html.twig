@@ -1,0 +1,223 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Personnel{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-kanban me-2"></i>
+                    Tableau de bord - Personnel
+                </h1>
+                <div class="text-muted">
+                    Bienvenue, {{ app.user.fullName ?: app.user.email }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Tickets
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_tickets }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-ticket-perforated fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Tickets Ouverts
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.open_tickets }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Mes Tickets
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.my_tickets }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Actions rapides</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <a href="{{ path('staff_tickets') }}" class="btn btn-primary btn-lg btn-block">
+                                <i class="bi bi-ticket-perforated me-2"></i>
+                                Voir tous les tickets
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a href="{{ path('staff_my_tickets') }}" class="btn btn-info btn-lg btn-block">
+                                <i class="bi bi-person-check me-2"></i>
+                                Mes tickets assignés
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <a href="{{ path('staff_tickets', {status: 'Nouveau'}) }}" class="btn btn-warning btn-lg btn-block">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Nouveaux tickets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Mes tickets -->
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Mes tickets récents</h6>
+                    <a href="{{ path('staff_my_tickets') }}" class="btn btn-sm btn-primary">Voir tous</a>
+                </div>
+                <div class="card-body">
+                    {% if my_tickets %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Auteur</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in my_tickets %}
+                                        <tr>
+                                            <td>{{ ticket.id }}</td>
+                                            <td>{{ ticket.authorEmail|split('@')[0] }}...</td>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ ticket.status.name }}</span>
+                                            </td>
+                                            <td>{{ ticket.openedAt|date('d/m') }}</td>
+                                            <td>
+                                                <a href="{{ path('staff_ticket_show', {'id': ticket.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Aucun ticket assigné.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tickets récents -->
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Tickets récents</h6>
+                    <a href="{{ path('staff_tickets') }}" class="btn btn-sm btn-primary">Voir tous</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_tickets %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Auteur</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in recent_tickets %}
+                                        <tr>
+                                            <td>{{ ticket.id }}</td>
+                                            <td>{{ ticket.authorEmail|split('@')[0] }}...</td>
+                                            <td>
+                                                {% if ticket.status.name == 'Nouveau' %}
+                                                    <span class="badge bg-info">{{ ticket.status.name }}</span>
+                                                {% elseif ticket.status.name == 'Ouvert' %}
+                                                    <span class="badge bg-warning">{{ ticket.status.name }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ ticket.status.name }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ ticket.openedAt|date('d/m') }}</td>
+                                            <td>
+                                                <a href="{{ path('staff_ticket_show', {'id': ticket.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Aucun ticket trouvé.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+</style>
+{% endblock %}

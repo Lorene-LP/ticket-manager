@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la catégorie{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil me-2"></i>
+                        Modifier la catégorie "{{ category.name }}"
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description) }}
+                            {{ form_errors(form.description) }}
+                            <div class="form-text">Optionnel - Décrivez brièvement cette catégorie</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('admin_categories') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Retour à la liste
+                            </a>
+                            {{ form_widget(form.submit) }}
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <!-- Informations sur l'utilisation -->
+            <div class="card shadow mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Informations</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-1">
+                        <strong>Tickets associés :</strong> 
+                        <span class="badge bg-info">{{ category.tickets|length }}</span>
+                    </p>
+                    {% if category.tickets|length > 0 %}
+                        <small class="text-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Cette catégorie ne peut pas être supprimée car elle est utilisée par des tickets.
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

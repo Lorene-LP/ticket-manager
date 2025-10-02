@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-people me-2"></i>
+                    Gestion des utilisateurs
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <a href="{{ path('admin_user_new') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Nouvel utilisateur
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Liste des utilisateurs</h6>
+                </div>
+                <div class="card-body">
+                    {% if users %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Email</th>
+                                        <th>Nom complet</th>
+                                        <th>Rôles</th>
+                                        <th>Tickets assignés</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                        <tr>
+                                            <td>{{ user.id }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>
+                                                {% if user.fullName %}
+                                                    {{ user.fullName }}
+                                                {% else %}
+                                                    <span class="text-muted">Non renseigné</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% for role in user.roles %}
+                                                    {% if role == 'ROLE_ADMIN' %}
+                                                        <span class="badge bg-danger">Admin</span>
+                                                    {% elseif role == 'ROLE_STAFF' %}
+                                                        <span class="badge bg-warning">Staff</span>
+                                                    {% elseif role == 'ROLE_USER' %}
+                                                        <span class="badge bg-info">User</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ user.assignedTickets|length }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ path('admin_user_edit', {'id': user.id}) }}" 
+                                                       class="btn btn-sm btn-outline-warning"
+                                                       title="Modifier">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    {% if user != app.user %}
+                                                        <form method="post" 
+                                                              action="{{ path('admin_user_delete', {'id': user.id}) }}" 
+                                                              style="display: inline;"
+                                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                                            <button class="btn btn-sm btn-outline-danger" 
+                                                                    type="submit"
+                                                                    title="Supprimer"
+                                                                    {% if user.assignedTickets|length > 0 %}disabled{% endif %}>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-people display-1 text-muted"></i>
+                            <p class="mt-3 text-muted">Aucun utilisateur trouvé.</p>
+                            <a href="{{ path('admin_user_new') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-lg me-1"></i>
+                                Créer le premier utilisateur
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes tickets assignés{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="bi bi-person-check me-2"></i>
+                    Mes tickets assignés
+                </h1>
+                <div class="text-muted">
+                    {{ tickets|length }} ticket{{ tickets|length > 1 ? 's' : '' }} assigné{{ tickets|length > 1 ? 's' : '' }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Tickets qui vous sont assignés</h6>
+                </div>
+                <div class="card-body">
+                    {% if tickets %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Auteur</th>
+                                        <th>Catégorie</th>
+                                        <th>Statut</th>
+                                        <th>Date d'ouverture</th>
+                                        <th>Durée</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in tickets %}
+                                        <tr class="table-info">
+                                            <td><strong>{{ ticket.id }}</strong></td>
+                                            <td>{{ ticket.authorEmail }}</td>
+                                            <td>
+                                                <span class="badge bg-primary">{{ ticket.category.name }}</span>
+                                            </td>
+                                            <td>
+                                                {% if ticket.status.name == 'Nouveau' %}
+                                                    <span class="badge bg-info">{{ ticket.status.name }}</span>
+                                                {% elseif ticket.status.name == 'Ouvert' %}
+                                                    <span class="badge bg-warning">{{ ticket.status.name }}</span>
+                                                {% elseif ticket.status.name == 'Résolu' %}
+                                                    <span class="badge bg-success">{{ ticket.status.name }}</span>
+                                                {% elseif ticket.status.name == 'Fermé' %}
+                                                    <span class="badge bg-secondary">{{ ticket.status.name }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ ticket.status.name }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ ticket.openedAt|date('d/m/Y H:i') }}</td>
+                                            <td>
+                                                {% set diff = (ticket.closedAt ?: date()).diff(ticket.openedAt) %}
+                                                {% if diff.days > 0 %}
+                                                    <span class="badge bg-light text-dark">{{ diff.days }}j</span>
+                                                {% elseif diff.h > 0 %}
+                                                    <span class="badge bg-light text-dark">{{ diff.h }}h</span>
+                                                {% else %}
+                                                    <span class="badge bg-light text-dark">{{ diff.i }}min</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ path('staff_ticket_show', {'id': ticket.id}) }}" 
+                                                       class="btn btn-sm btn-outline-primary"
+                                                       title="Voir et modifier">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    <a href="mailto:{{ ticket.authorEmail }}?subject=Re: Ticket #{{ ticket.id }}" 
+                                                       class="btn btn-sm btn-outline-success"
+                                                       title="Contacter l'auteur">
+                                                        <i class="bi bi-envelope"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Résumé par statut -->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <h6>Résumé par statut :</h6>
+                                {% set status_counts = {} %}
+                                {% for ticket in tickets %}
+                                    {% set status_name = ticket.status.name %}
+                                    {% set status_counts = status_counts|merge({(status_name): (status_counts[status_name]|default(0) + 1)}) %}
+                                {% endfor %}
+                                
+                                {% for status, count in status_counts %}
+                                    <span class="badge bg-secondary me-2">{{ status }}: {{ count }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-person-check display-1 text-muted"></i>
+                            <p class="mt-3 text-muted">Aucun ticket ne vous est actuellement assigné.</p>
+                            <a href="{{ path('staff_tickets') }}" class="btn btn-primary">
+                                <i class="bi bi-ticket-perforated me-1"></i>
+                                Voir tous les tickets
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le ticket #{{ ticket.id }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil me-2"></i>
+                        Modifier le ticket #{{ ticket.id }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.authorEmail, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.authorEmail) }}
+                                {{ form_errors(form.authorEmail) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.responsible, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.responsible) }}
+                                {{ form_errors(form.responsible) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.category, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.category) }}
+                                {{ form_errors(form.category) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.status, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.status) }}
+                                {{ form_errors(form.status) }}
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Le statut "Fermé" définira automatiquement la date de fermeture
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('admin_ticket_show', {'id': ticket.id}) }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Retour aux détails
+                            </a>
+                            {{ form_widget(form.submit) }}
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <!-- Informations sur le ticket -->
+            <div class="card shadow mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Informations du ticket</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <strong>ID :</strong> {{ ticket.id }}<br>
+                                <strong>Créé le :</strong> {{ ticket.openedAt|date('d/m/Y à H:i') }}
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                {% if ticket.closedAt %}
+                                    <strong>Fermé le :</strong> {{ ticket.closedAt|date('d/m/Y à H:i') }}<br>
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">
+                                <strong>Durée :</strong> 
+                                {% set diff = (ticket.closedAt ?: date()).diff(ticket.openedAt) %}
+                                {% if diff.days > 0 %}
+                                    {{ diff.days }} jour{{ diff.days > 1 ? 's' : '' }}
+                                {% elseif diff.h > 0 %}
+                                    {{ diff.h }} heure{{ diff.h > 1 ? 's' : '' }}
+                                {% else %}
+                                    {{ diff.i }} minute{{ diff.i > 1 ? 's' : '' }}
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

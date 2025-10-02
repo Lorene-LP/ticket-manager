@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau statut{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-plus-lg me-2"></i>
+                        Créer un nouveau statut
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description) }}
+                            {{ form_errors(form.description) }}
+                            <div class="form-text">Optionnel - Décrivez brièvement ce statut</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form_widget(form.isDefault) }}
+                                {{ form_label(form.isDefault, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                            </div>
+                            {{ form_errors(form.isDefault) }}
+                            {% if form.isDefault.vars.help %}
+                                <div class="form-text">{{ form.isDefault.vars.help }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('admin_statuses') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Retour à la liste
+                            </a>
+                            {{ form_widget(form.submit) }}
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
