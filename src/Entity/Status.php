@@ -108,7 +108,7 @@ class Status
     public function removeTicket(Ticket $ticket): static
     {
         if ($this->tickets->removeElement($ticket)) {
-            // set the owning side to null (unless already changed)
+            // Définir le côté propriétaire à null (sauf si déjà modifié)
             if ($ticket->getStatus() === $this) {
                 $ticket->setStatus(null);
             }

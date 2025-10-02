@@ -173,7 +173,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeAssignedTicket(Ticket $assignedTicket): static
     {
         if ($this->assignedTickets->removeElement($assignedTicket)) {
-            // set the owning side to null (unless already changed)
+            // Définir le côté propriétaire à null (sauf si déjà modifié)
             if ($assignedTicket->getResponsible() === $this) {
                 $assignedTicket->setResponsible(null);
             }
