@@ -88,3 +88,10 @@ git push -u origin main
 ```
 
 **⚠️ Important :** Créez un fichier `.env.local` avec vos vraies informations de base de données (ce fichier ne sera pas envoyé sur GitHub).
+
+## 📝 Notes techniques
+
+### Conventions de commentaires
+Les commentaires de ce projet suivent une logique intentionnelle :
+- **Code PHP/Métier** : Commentaires en français pour clarifier la logique métier spécifique au contexte français.
+- **Templates/Frontend** : Commentaires en anglais selon les standards internationaux du développement web.
