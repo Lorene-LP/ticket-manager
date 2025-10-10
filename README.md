@@ -4,6 +4,8 @@ Application de gestion de tickets développée avec Symfony 6.4 pour une agence 
 
 ## 🚀 Démarrage Rapide
 
+### Linux/macOS/WSL
+
 ```bash
 # 1. Cloner le projet
 git clone [URL_DU_REPO]
@@ -27,6 +29,39 @@ php bin/console doctrine:fixtures:load
 
 # 7. Démarrer le serveur
 php -S localhost:8000 -t public
+```
+
+### Windows (XAMPP)
+
+```powershell
+# 1. Cloner le projet
+git clone [URL_DU_REPO]
+cd ticket-manager
+
+# 2. Installer Composer (si pas déjà fait)
+Invoke-WebRequest -Uri "https://getcomposer.org/installer" -OutFile "composer-setup.php"
+c:\xampp\php\php.exe composer-setup.php --install-dir=c:\xampp\php --filename=composer
+Remove-Item composer-setup.php
+
+# 3. Installer les dépendances
+c:\xampp\php\php.exe c:\xampp\php\composer install
+
+# 4. Configurer la base de données
+Copy-Item .env.example .env.local
+# Puis éditer .env.local avec : DATABASE_URL="mysql://root:@127.0.0.1:3306/ticket_manager?serverVersion=8.0.32&charset=utf8mb4"
+
+# 5. S'assurer que MySQL est démarré dans XAMPP
+# 6. Créer la base de données
+c:\xampp\php\php.exe bin/console doctrine:database:create
+
+# 7. Exécuter les migrations
+c:\xampp\php\php.exe bin/console doctrine:migrations:migrate --no-interaction
+
+# 8. Charger les données de test
+c:\xampp\php\php.exe bin/console doctrine:fixtures:load --no-interaction
+
+# 9. Démarrer le serveur
+c:\xampp\php\php.exe -S localhost:8000 -t public
 ```
 
 ## 🔐 Comptes de Test
